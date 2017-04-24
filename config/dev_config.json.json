@@ -6,6 +6,6 @@
     "groupName": "Phase1Group",
     "topicName": "Phase1Topic",
     "consumerName": "Phase1Consumer",
-    "scriptName": "createTrainingFile.sh",
+    "scriptName": "LabelImageTensorFLow.sh",
     "producerTopicName": "Phase2Topics"
 }

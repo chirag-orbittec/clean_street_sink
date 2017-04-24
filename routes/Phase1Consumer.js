@@ -5,6 +5,9 @@ var async = require('async');
 var kafka = require('kafka-node');
 var asyncqueue = require('async.queue');
 var path = require('path');
+var piexif = require("piexifjs");
+var fsPath = require('fs-path');
+var path = require('path');
 var ConsumerGroup = kafka.ConsumerGroup;
 var producer = require('./producer');
 var messageAPI = require('./message');
@@ -33,20 +36,31 @@ consumerGroup1.on('message', onMessage);
 var q1 = asyncqueue(function(message, callback) {
     var spawn,
         exportScriptParams,
+        tempImageFileName = path.join(__dirname, "..", "images", "temp", "tempPipeline" + new Date().getTime() + '.jpg'),
+        imagebase64Data = message.value.replace(/^data:([A-Za-z-+\/]+);base64,/, ""),
         child;
-    spawn = require('child_process').spawnSync;
-    exportScriptParams = [scriptName,message];
-    child = spawn('sh', exportScriptParams, {cwd: path.join(__dirname, "..")});
 
-    console.log('stdout here: \n' + child.stdout);
-    console.log('stderr here: \n' + child.stderr);
-    console.log('status here: \n' + child.status);
+    fsPath.writeFile(tempImageFileName, imagebase64Data, 'base64', function (err) {
+        if (err) {
+            console.log('Error - 1');
+        }
+        else{
+            spawn = require('child_process').spawnSync;
+            // Put script name as first parameter and rest as arguement to script
+            // in below Array
+            exportScriptParams = [scriptName,tempImageFileName];
+            child = spawn('sh', exportScriptParams, {cwd: path.join(__dirname, "..")});
 
-    if (child.status === 0) {
-        callback();
-        return;
-    }
+            console.log('stdout here: \n' + child.stdout);
+            console.log('stderr here: \n' + child.stderr);
+            console.log('status here: \n' + child.status);
 
+            if (child.status === 0) {
+                callback();
+                return;
+            }
+        }
+    });
 }, 1);
 
 q1.drain = function(){
