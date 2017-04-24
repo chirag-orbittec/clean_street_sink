@@ -1,8 +1,8 @@
 {
     "env_type": "server",
-    "mongodbServerURL": "localhost:3000",
-    "zookeeperServerURL": "localhost:2181",
-    "kafkaServerURL": "localhost:9092",
+    "mongodbServerURL": "10.82.200.130:3000",
+    "zookeeperServerURL": "10.82.200.90:2181",
+    "kafkaServerURL": "10.82.200.90:9092",
     "groupName": "Phase1Group",
     "topicName": "Phase1Topic",
     "consumerName": "Phase1Consumer",
