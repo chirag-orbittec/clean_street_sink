@@ -6,14 +6,12 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-<<<<<<< 01ce225d2353f53cdac332224221b818562f1e48
     "body-parser": "~1.16.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
     "ejs": "~2.5.5",
     "express": "~4.14.1",
     "morgan": "~1.7.0",
-=======
     "async.queue": "^0.5.2",
     "bfj": "^3.0.0",
     "body-parser": "~1.16.0",
@@ -32,7 +30,7 @@
     "morgan": "~1.7.0",
     "node-sass-middleware": "0.9.8",
     "promise": "^7.1.1",
->>>>>>> Added Kafka producer consumer
+    "piexifjs": "^1.0.3",
     "serve-favicon": "~2.3.2"
   }
 }
