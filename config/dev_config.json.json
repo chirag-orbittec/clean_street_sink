@@ -1,0 +1,11 @@
+{
+    "env_type": "dev",
+    "mongodbServerURL": "localhost:27017",
+    "zookeeperServerURL": "localhost:2181",
+    "kafkaServerURL": "localhost:9092",
+    "groupName": "Phase1Group",
+    "topicName": "Phase1Topic",
+    "consumerName": "Phase1Consumer",
+    "scriptName": "createTrainingFile.sh",
+    "producerTopicName": "Phase2Topics"
+}

@@ -1,3 +1,5 @@
+
+config_file = require('./config/configuration');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -7,6 +9,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 
+var Phase1Consumer = require('./routes/Phase1Consumer');
 var app = express();
 
 // view engine setup
