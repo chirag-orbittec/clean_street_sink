@@ -74,7 +74,7 @@ function onMessage (message) {
                 }
 
                 // Add all the modification here and then -- Pending
-                
+
                 //  Sending it to Phase2 Topic -- Insert this code in callback
 
                 var kafkamessage = [];
