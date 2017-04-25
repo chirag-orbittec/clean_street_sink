@@ -89,6 +89,8 @@ function onMessage (message) {
 
                 // Add all the modification here and then -- Pending
 
+                var result = require(path.join(__dirname, "..")+result);
+                console.log(result);
                 //  Sending it to Phase2 Topic -- Insert this code in callback
 
                 var kafkamessage = [];
