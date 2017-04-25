@@ -11,6 +11,7 @@ var path = require('path');
 var ConsumerGroup = kafka.ConsumerGroup;
 var producer = require('./producer');
 var messageAPI = require('./message');
+var PhaseBehavior = require('./PhaseBehavior');
 var groupName = config_file.groupName;
 var topicName = config_file.topicName;
 var consumerName = config_file.consumerName;
@@ -86,9 +87,9 @@ function onMessage (message) {
                 if(err){
                     console.log(err);
                 }
-
+                PhaseBehavior.phaseBehavior();
                 // Add all the modification here and then -- Pending
-                var Phase4Result = require(path.join(__dirname, "..")+'/result');
+                var config_file.phase+Result = require(path.join(__dirname, "..","temp")+'/result');
                 addResultInImage(Phase4Result,message1.value,config_file.phase,function(finalResult){
                     //  Sending it to Phase2 Topic -- Insert this code in callback
                     var kafkamessage = [];
