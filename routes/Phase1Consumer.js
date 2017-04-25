@@ -89,8 +89,8 @@ function onMessage (message) {
                 }
                 PhaseBehavior.phaseBehavior();
                 // Add all the modification here and then -- Pending
-                var config_file.phase+Result = require(path.join(__dirname, "..","temp")+'/result');
-                addResultInImage(Phase4Result,message1.value,config_file.phase,function(finalResult){
+                var PhaseResult = require(path.join(__dirname, "..","temp")+'/result');
+                addResultInImage(PhaseResult,message1.value,config_file.phase,function(finalResult){
                     //  Sending it to Phase2 Topic -- Insert this code in callback
                     var kafkamessage = [];
 
