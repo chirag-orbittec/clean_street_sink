@@ -88,31 +88,53 @@ function onMessage (message) {
                 }
 
                 // Add all the modification here and then -- Pending
-                console.log(path.join(__dirname, "..")+'/result');
-                var result = require(path.join(__dirname, "..")+'/result');
-                console.log(result);
-                var exifObj = piexif.load(message1.value);
-                console.log("Printing the exifobj");
-                console.log(exifObj);
-                //  Sending it to Phase2 Topic -- Insert this code in callback
+                var Phase4Result = require(path.join(__dirname, "..")+'/result');
+                addResultInImage(Phase4Result,message1.value,config_file.phase,function(finalResult){
+                    //  Sending it to Phase2 Topic -- Insert this code in callback
+                    var kafkamessage = [];
 
-                var kafkamessage = [];
+                    try {
+                        kafkamessage.push(messageAPI.createMessage('keyed',"image", finalResult));
+                        producer.sendMessage(producerTopicName,kafkamessage,0,0,function(result){
+                            console.log('Message passed to -' +producerTopicName);
+                        });
 
-                try {
-                    kafkamessage.push(messageAPI.createMessage('keyed',"image", message1.value));
-                    producer.sendMessage(producerTopicName,kafkamessage,0,0,function(result){
-                        console.log('Message passed to -' +producerTopicName);
-                    });
-
-                }
-                catch(error){
-                    console.log(error);
-                    console.log('Error - 1');
-                    console.log(error);
-                }
+                    }
+                    catch(error){
+                        console.log(error);
+                        console.log('Error - 1');
+                        console.log(error);
+                    }
+                });
             });
 
     });
     consumerGroup1.pause();
 }
 
+/*
+This function will take json result, image as base64,
+insert json result in exif user comment, insert it into
+image and return the image with latest exif.
+return image with exif
+ */
+function addResultInImage(result,image,phase,callback){
+    var exifObj = piexif.load(image);
+    // Extracting user comment from exif
+    var userComment = JSON.parse(exifObj["Exif"][piexif.ExifIFD.UserComment]);
+    // Setting result in user comment
+    userComment[phase+'Result'] = result;
+    console.log('Phase4Result ' + JSON.stringify(userComment[phase+'Result']));
+    // Updating UserComment in exif object
+    exifObj["Exif"][piexif.ExifIFD.UserComment] = JSON.stringify(userComment);
+    console.log(exifObj);
+    //Removing exif object from current image
+    var bufferedImageDataURI = piexif.remove(image);
+    //Converting exifobject into stream
+    var exifbytes = piexif.dump(exifObj);
+    //added the new exif object
+    bufferedImageDataURI  = piexif.insert(exifbytes, bufferedImageDataURI);
+    console.log(piexif.load(bufferedImageDataURI));
+    callback(bufferedImageDataURI);
+
+}
