@@ -89,7 +89,7 @@ function onMessage (message) {
 
                 // Add all the modification here and then -- Pending
                 console.log(path.join(__dirname, "..")+'/result');
-                var result = require(path.join(__dirname, "..")+result);
+                var result = require(path.join(__dirname, "..")+'/result');
                 console.log(result);
                 var exifObj = piexif.load(message1.value);
                 console.log("Printing the exifobj");
