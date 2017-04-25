@@ -37,7 +37,7 @@ var q1 = asyncqueue(function(message, callback) {
     var spawn,
         exportScriptParams,
         tempImageFileName = path.join(__dirname, "..", "images", "temp", "tempPipeline" + new Date().getTime() + '.jpg'),
-        imagebase64Data = message.message.value.replace(/^data:([A-Za-z-+\/]+);base64,/, ""),
+        imagebase64Data = message.message.value.toString().replace(/^data:([A-Za-z-+\/]+);base64,/, ""),
         child;
 
     fsPath.writeFile(tempImageFileName, imagebase64Data, 'base64', function (err) {
