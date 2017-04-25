@@ -123,7 +123,7 @@ function addResultInImage(result,image,phase,callback){
     // Extracting user comment from exif
     var userComment = JSON.parse(exifObj["Exif"][piexif.ExifIFD.UserComment]);
     // Setting result in user comment
-    userComment[phase+'Result'] = result;
+    userComment[phase+'Result'] = json.stringify(result);
     console.log('Phase4Result ' + JSON.stringify(userComment[phase+'Result']));
     // Updating UserComment in exif object
     exifObj["Exif"][piexif.ExifIFD.UserComment] = JSON.stringify(userComment);
