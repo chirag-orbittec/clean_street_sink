@@ -8,18 +8,16 @@ pwd=`pwd`
 echo "pwd is $pwd"
 
 export DEEPMASK="/home/cuda/cleanstreets/deepmask/deepmask"
-export DEEPMASKMODEL="/home/cuda/cleanstreets/deepmask/pretrained/deepmask"
+export DEEPMASKMODEL="/home/cuda/cleanstreets/deepmask/deepmask/pretrained/deepmask"
 
 echo "starting deepmask"
 cd $DEEPMASK
-th computeProposals.lua $DEEPMASKMODEL  -img $pwd/$1
+th computeProposals.lua $DEEPMASKMODEL  -img $pwd/$1 -np 15
 
-echo "finished deepmask... now moving files"
+echo "finished deepmask... now blending the proposals"
+python blendImages.py 15
 
-mv $DEEPMASK/res1.jpg $pwd
-mv $DEEPMASK/res2.jpg $pwd
-mv $DEEPMASK/res3.jpg $pwd
-mv $DEEPMASK/res4.jpg $pwd
-mv $DEEPMASK/res5.jpg $pwd
+echo "finally ... moving the file"
+mv $DEEPMASK/final.jpg $pwd
 
 echo "Bye!"
