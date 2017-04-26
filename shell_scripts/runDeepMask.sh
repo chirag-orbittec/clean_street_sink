@@ -19,8 +19,8 @@ echo "finally ... moving the file"
 mv $DEEPMASK/deepmask_output.jpg ~/clean_street_sink/temp
 
 echo "returning boundarybox as string"
-python boundaryBoxJson.py > boundaryBox.json
-mv $DEEPMASK/boundaryBox.json ~/clean_street_sink/temp
+python boundaryBoxJson.py > result.json
+mv $DEEPMASK/result.json ~/clean_street_sink/temp
 
 
 echo "output : deepmask_output.jpg and boundaryBox.json located in ~/clean_street_sink/temp"
