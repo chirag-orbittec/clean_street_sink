@@ -5,16 +5,16 @@
 
 var fs = require('fs');
 var path = require('path');
-function phase1(exifObj,PhaseResult,image, config_file.phase,addResultInImage,sendMessage){
+function phase1(exifObj,PhaseResult,image,phase,addResultInImage,sendMessage){
     console.log("i am in phase1");
-    addResultInImage(exifObj,PhaseResult,image, config_file.phase,sendMessage);
+    addResultInImage(exifObj,PhaseResult,image, phase,sendMessage);
 }
 
-function phase2(exifObj,PhaseResult,image, config_file.phase,addResultInImage,sendMessage){
+function phase2(exifObj,PhaseResult,image, phase,addResultInImage,sendMessage){
     // read the image file created by deepmask to send it further
     console.log("i am in phase2");
     var image1 =  base64_encode(path.join(__dirname, '..', 'temp', 'deepmask_output.jpg'));
-    addResultInImage(exifObj,PhaseResult,image1, config_file.phase,sendMessage);
+    addResultInImage(exifObj,PhaseResult,image1,phase,sendMessage);
 
 }
 
