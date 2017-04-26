@@ -4,16 +4,18 @@
 
 
 var fs = require('fs');
-
-function phase1(){
+var path = require('path');
+function phase1(exifObj,PhaseResult,image, config_file.phase,addResultInImage,sendMessage){
     console.log("i am in phase1");
+    addResultInImage(exifObj,PhaseResult,image, config_file.phase,sendMessage);
 }
 
-function phase2(){
+function phase2(exifObj,PhaseResult,image, config_file.phase,addResultInImage,sendMessage){
     // read the image file created by deepmask to send it further
-    var base64bufferedImageDataURIstr = base64_encode('../temp/deepmask_output.jpg');
-    console.log(bufferedImageDataURI);
-    return bufferedImageDataURI;
+    console.log("i am in phase2");
+    var image1 =  base64_encode(path.join(__dirname, '..', 'temp', 'deepmask_output.jpg'));
+    addResultInImage(exifObj,PhaseResult,image1, config_file.phase,sendMessage);
+
 }
 
 switch(config_file.phaseBehavior){

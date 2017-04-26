@@ -23,7 +23,7 @@ var consumerOptions = {
     host: config_file.zookeeperServerURL,
     groupId: groupName,
     autoCommit : false,
-    sessionTimeout: 15000,
+    sessionTimeout: 999999,
     protocol: ['roundrobin'],
     fromOffset: 'latest' // equivalent of auto.offset.reset valid values are 'none', 'latest', 'earliest'
 };
@@ -50,8 +50,7 @@ var q1 = asyncqueue(function(message, callback) {
             // Put script name as first parameter and rest as arguement to script
             // in below Array
             exportScriptParams = [scriptName,tempImageFileName];
-            child = spawn('sh', exportScriptParams, {cwd: path.join(__dirname, "..")});
-
+            child = spawn('sh', exportScriptParams, {cwd: path.join(__dirname, "..","shell_scripts")});
             console.log('stdout here: \n' + child.stdout);
             console.log('stderr here: \n' + child.stderr);
             console.log('status here: \n' + child.status);
@@ -86,35 +85,30 @@ function onMessage (message) {
             }], function (err, data) {
                 if(err){
                     console.log(err);
-                }
-                console.log(PhaseBehavior);
-                var exifObj = piexif.load(message1.value);
-                var image = message1.value;
-                if(config_file.phase=='phase2') {
-                 image  =   PhaseBehavior.ExecutePhaseLogic();
+                    return;
                 }
                 else {
-                    PhaseBehavior.ExecutePhaseLogic();
+                    console.log(PhaseBehavior);
+                    var exifObj = piexif.load(message1.value);
+                    PhaseBehavior.ExecutePhaseLogic(exifObj,PhaseResult,image, config_file.phase, addResultInImage,function (finalResult) {
+                        //  Sending it to Phase2 Topic -- Insert this code in callback
+                        var kafkamessage = [];
+
+                        try {
+                            kafkamessage.push(messageAPI.createMessage('keyed', "image", finalResult));
+                            producer.sendMessage(producerTopicName, kafkamessage, 0, 0, function (result) {
+                                console.log('Message passed to -' + producerTopicName);
+                                kafkamessage.splice(0, kafkamessage.length);
+                            });
+
+                        }
+                        catch (error) {
+                            console.log(error);
+                            console.log('Error - 1');
+                            console.log(error);
+                        }
+                    });
                 }
-                // Add all the modification here and then -- Pending
-                var PhaseResult = require(path.join(__dirname, "..","temp")+'/result');
-                addResultInImage(exifObj,PhaseResult,image,config_file.phase,function(finalResult){
-                    //  Sending it to Phase2 Topic -- Insert this code in callback
-                    var kafkamessage = [];
-
-                    try {
-                        kafkamessage.push(messageAPI.createMessage('keyed',"image", finalResult));
-                        producer.sendMessage(producerTopicName,kafkamessage,0,0,function(result){
-                            console.log('Message passed to -' +producerTopicName);
-                        });
-
-                    }
-                    catch(error){
-                        console.log(error);
-                        console.log('Error - 1');
-                        console.log(error);
-                    }
-                });
             });
 
     });
