@@ -5,7 +5,7 @@
     "kafkaServerURL": "localhost:9092",
     "groupName": "Phase1Group",
     "phase" : "Phase4",
-    "phaseBehavior": "phase2";
+    "phaseBehavior": "phase2",
     "topicName": "Phase1Topic",
     "consumerName": "Phase1Consumer",
     "scriptName": "LabelImageTensorFLow.sh",

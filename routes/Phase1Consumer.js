@@ -87,7 +87,8 @@ function onMessage (message) {
                 if(err){
                     console.log(err);
                 }
-                PhaseBehavior.phaseBehavior();
+		console.log(PhaseBehavior);
+                PhaseBehavior.ExecutePhaseLogic();
                 // Add all the modification here and then -- Pending
                 var PhaseResult = require(path.join(__dirname, "..","temp")+'/result');
                 addResultInImage(PhaseResult,message1.value,config_file.phase,function(finalResult){
