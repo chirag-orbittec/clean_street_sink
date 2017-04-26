@@ -87,11 +87,18 @@ function onMessage (message) {
                 if(err){
                     console.log(err);
                 }
-		console.log(PhaseBehavior);
-                PhaseBehavior.ExecutePhaseLogic();
+                console.log(PhaseBehavior);
+                var exifObj = piexif.load(message1.value);
+                var image = message1.value;
+                if(config_file.phase=='phase2') {
+                 image  =   PhaseBehavior.ExecutePhaseLogic();
+                }
+                else {
+                    PhaseBehavior.ExecutePhaseLogic();
+                }
                 // Add all the modification here and then -- Pending
                 var PhaseResult = require(path.join(__dirname, "..","temp")+'/result');
-                addResultInImage(PhaseResult,message1.value,config_file.phase,function(finalResult){
+                addResultInImage(exifObj,PhaseResult,image,config_file.phase,function(finalResult){
                     //  Sending it to Phase2 Topic -- Insert this code in callback
                     var kafkamessage = [];
 
@@ -120,8 +127,8 @@ insert json result in exif user comment, insert it into
 image and return the image with latest exif.
 return image with exif
  */
-function addResultInImage(result,image,phase,callback){
-    var exifObj = piexif.load(image);
+function addResultInImage(exifObj,result,image,phase,callback){
+    var exifObj =  exifObj;
     // Extracting user comment from exif
     var userComment = JSON.parse(exifObj["Exif"][piexif.ExifIFD.UserComment]);
     // Setting result in user comment
