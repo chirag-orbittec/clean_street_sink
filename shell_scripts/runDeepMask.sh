@@ -10,7 +10,7 @@ pwd=`pwd`
 
 echo "starting deepmask and generating 15 proposal images"
 cd $DEEPMASK
-th computeProposals.lua $DEEPMASKMODEL  -img $pwd/$1 -np 15
+th computeProposals.lua $DEEPMASKMODEL  -img $1 -np 15
 
 echo "finished deepmask... now blending the proposals"
 python blendImages.py 15
