@@ -40,27 +40,37 @@ var q1 = asyncqueue(function(message, callback) {
         tempImageFileName = path.join(__dirname, "..", "images", "temp", "tempPipeline" + new Date().getTime() + '.jpg'),
         imagebase64Data = message.message.value.toString().replace(/^data:([A-Za-z-+\/]+);base64,/, ""),
         child;
-
-    fsPath.writeFile(tempImageFileName, imagebase64Data, 'base64', function (err) {
+    var exifObj = piexif.load(message.value);
+    var userComment = JSON.parse(exifObj["Exif"][piexif.ExifIFD.UserComment]);
+    var previousPhaseResult = userComment[config_file.previousPhase+'Result'];
+    fs.writeFile(path.join(__dirname, "..","temp")+'/PreviousResult.json', JSON.stringify(previousPhaseResult), function(err) {
         if (err) {
-            console.log('Error - 1');
-        }
-        else{
-            spawn = require('child_process').spawnSync;
-            // Put script name as first parameter and rest as arguement to script
-            // in below Array
-            exportScriptParams = [scriptName,tempImageFileName];
-            child = spawn('sh', exportScriptParams, {cwd: path.join(__dirname, "..","shell_scripts")});
-            console.log('stdout here: \n' + child.stdout);
-            console.log('stderr here: \n' + child.stderr);
-            console.log('status here: \n' + child.status);
-
-            if (child.status === 0) {
-                callback();
-                return;
+            console.error(err);
+            return;
+        };
+            console.log("File has been created");
+        fsPath.writeFile(tempImageFileName, imagebase64Data, 'base64', function (err) {
+            if (err) {
+                console.log('Error - 1');
             }
-        }
-    });
+            else{
+
+                spawn = require('child_process').spawnSync;
+                // Put script name as first parameter and rest as arguement to script
+                // in below Array
+                exportScriptParams = [scriptName,tempImageFileName];
+                child = spawn('sh', exportScriptParams, {cwd: path.join(__dirname, "..","shell_scripts")});
+                console.log('stdout here: \n' + child.stdout);
+                console.log('stderr here: \n' + child.stderr);
+                console.log('status here: \n' + child.status);
+
+                if (child.status === 0) {
+                    callback();
+                    return;
+                }
+            }
+        });
+        });
 }, 1);
 
 q1.drain = function(){
@@ -130,7 +140,7 @@ function addResultInImage(exifObj,result,image,phase,callback){
     var userComment = JSON.parse(exifObj["Exif"][piexif.ExifIFD.UserComment]);
     // Setting result in user comment
     userComment[phase+'Result'] = JSON.stringify(result);
-    console.log('Phase4Result ' + JSON.stringify(userComment[phase+'Result']));
+    console.log('Result ' + JSON.stringify(userComment[phase+'Result']));
     // Updating UserComment in exif object
     exifObj["Exif"][piexif.ExifIFD.UserComment] = JSON.stringify(userComment);
     console.log(exifObj);

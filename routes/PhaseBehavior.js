@@ -5,6 +5,8 @@
 
 var fs = require('fs');
 var path = require('path');
+var piexif = require("piexifjs");
+
 function phase1(exifObj,PhaseResult,image,phase,addResultInImage,sendMessage){
     console.log("i am in phase1");
     var image1 =  'data:image/jpeg;base64,' + base64_encode(path.join(__dirname, '..', 'temp', 'deepmask_output.jpg'));

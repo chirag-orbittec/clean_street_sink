@@ -4,6 +4,7 @@
     "zookeeperServerURL": "10.82.200.90:2181",
     "kafkaServerURL": "10.82.200.90:9092",
     "phase" : "Phase4",
+    "previousPhase" : "Phase3",
     "phaseBehavior": "phase2",
     "groupName": "Phase1Group",
     "topicName": "Phase1Topic",
