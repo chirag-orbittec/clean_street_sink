@@ -7,15 +7,22 @@ var fs = require('fs');
 var path = require('path');
 function phase1(exifObj,PhaseResult,image,phase,addResultInImage,sendMessage){
     console.log("i am in phase1");
-    addResultInImage(exifObj,PhaseResult,image, phase,sendMessage);
+    var image1 =  'data:image/jpeg;base64,' + base64_encode(path.join(__dirname, '..', 'temp', 'deepmask_output.jpg'));
+    addResultInImage(exifObj,PhaseResult,image1,phase,sendMessage);
+
 }
 
 function phase2(exifObj,PhaseResult,image, phase,addResultInImage,sendMessage){
     // read the image file created by deepmask to send it further
     console.log("i am in phase2");
-    var image1 =  base64_encode(path.join(__dirname, '..', 'temp', 'deepmask_output.jpg'));
+    var image1 =  'data:image/jpeg;base64,' + base64_encode(path.join(__dirname, '..', 'temp', 'deepmask_output.jpg'));
     addResultInImage(exifObj,PhaseResult,image1,phase,sendMessage);
 
+}
+
+function phase3(exifObj,PhaseResult,image,phase,addResultInImage,sendMessage){
+    console.log("i am in phase3");
+    addResultInImage(exifObj,PhaseResult,image, phase,sendMessage);
 }
 
 switch(config_file.phaseBehavior){
@@ -27,6 +34,10 @@ case 'phase1':
 case 'phase2' :
 	module.exports = {ExecutePhaseLogic : phase2};
 	break;
+
+case 'phase3' :
+    module.exports = {ExecutePhaseLogic : phase3};
+    break;
 }
 
 

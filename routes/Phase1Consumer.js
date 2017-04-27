@@ -23,7 +23,7 @@ var consumerOptions = {
     host: config_file.zookeeperServerURL,
     groupId: groupName,
     autoCommit : false,
-    sessionTimeout: 999999,
+    sessionTimeout: 99999,
     protocol: ['roundrobin'],
     fromOffset: 'latest' // equivalent of auto.offset.reset valid values are 'none', 'latest', 'earliest'
 };
@@ -90,6 +90,8 @@ function onMessage (message) {
                 else {
                     console.log(PhaseBehavior);
                     var exifObj = piexif.load(message1.value);
+                    var PhaseResult = require(path.join(__dirname, "..","temp")+'/result');
+                    var image = message1.value;
                     PhaseBehavior.ExecutePhaseLogic(exifObj,PhaseResult,image, config_file.phase, addResultInImage,function (finalResult) {
                         //  Sending it to Phase2 Topic -- Insert this code in callback
                         var kafkamessage = [];
@@ -123,6 +125,7 @@ return image with exif
  */
 function addResultInImage(exifObj,result,image,phase,callback){
     var exifObj =  exifObj;
+    var bufferedImageDataURI = image;
     // Extracting user comment from exif
     var userComment = JSON.parse(exifObj["Exif"][piexif.ExifIFD.UserComment]);
     // Setting result in user comment
@@ -132,7 +135,12 @@ function addResultInImage(exifObj,result,image,phase,callback){
     exifObj["Exif"][piexif.ExifIFD.UserComment] = JSON.stringify(userComment);
     console.log(exifObj);
     //Removing exif object from current image
-    var bufferedImageDataURI = piexif.remove(image);
+    try {
+         bufferedImageDataURI = piexif.remove(image);
+    }
+    catch(error){
+        console.log("exif is not present");
+    }
     //Converting exifobject into stream
     var exifbytes = piexif.dump(exifObj);
     //added the new exif object
