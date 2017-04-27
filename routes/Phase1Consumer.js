@@ -40,9 +40,13 @@ var q1 = asyncqueue(function(message, callback) {
         tempImageFileName = path.join(__dirname, "..", "images", "temp", "tempPipeline" + new Date().getTime() + '.jpg'),
         imagebase64Data = message.message.value.toString().replace(/^data:([A-Za-z-+\/]+);base64,/, ""),
         child;
-    var exifObj = piexif.load(message.value);
+    var exifObj = piexif.load(message.message.value);
     var userComment = JSON.parse(exifObj["Exif"][piexif.ExifIFD.UserComment]);
-    var previousPhaseResult = userComment[config_file.previousPhase+'Result'];
+    var previousPhaseResult;
+    if(config_file.previousPhase)
+    previousPhaseResult = userComment[config_file.previousPhase+'Result'];
+    else
+        previousPhaseResult = {};
     fs.writeFile(path.join(__dirname, "..","temp")+'/PreviousResult.json', JSON.stringify(previousPhaseResult), function(err) {
         if (err) {
             console.error(err);
