@@ -8,6 +8,7 @@ var path = require('path');
 var piexif = require("piexifjs");
 var fsPath = require('fs-path');
 var path = require('path');
+var fs = require('fs');
 var ConsumerGroup = kafka.ConsumerGroup;
 var producer = require('./producer');
 var messageAPI = require('./message');
