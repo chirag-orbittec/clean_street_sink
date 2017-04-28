@@ -105,24 +105,29 @@ function onMessage (message) {
                 else {
                     console.log(PhaseBehavior);
                     var exifObj = piexif.load(message1.value);
-                    var PhaseResult = require(path.join(__dirname, "..","temp")+'/result');
-                    var image = message1.value;
-                    PhaseBehavior.ExecutePhaseLogic(exifObj,PhaseResult,image, config_file.phase, addResultInImage,function (finalResult) {
-                        //  Sending it to Phase2 Topic -- Insert this code in callback
-                        var kafkamessage = [];
+                    fs.readFileSync(path.join(__dirname, "..","temp")+'/result', 'utf8', function (err, data) {
+                        if (err) throw err;
+                        else {
+                           var PhaseResult = JSON.parse(data);
+                            var image = message1.value;
+                            PhaseBehavior.ExecutePhaseLogic(exifObj,PhaseResult,image, config_file.phase, addResultInImage,function (finalResult) {
+                                //  Sending it to Phase2 Topic -- Insert this code in callback
+                                var kafkamessage = [];
 
-                        try {
-                            kafkamessage.push(messageAPI.createMessage('keyed', "image", finalResult));
-                            producer.sendMessage(producerTopicName, kafkamessage, 0, 0, function (result) {
-                                console.log('Message passed to -' + producerTopicName);
-                                kafkamessage.splice(0, kafkamessage.length);
+                                try {
+                                    kafkamessage.push(messageAPI.createMessage('keyed', "image", finalResult));
+                                    producer.sendMessage(producerTopicName, kafkamessage, 0, 0, function (result) {
+                                        console.log('Message passed to -' + producerTopicName);
+                                        kafkamessage.splice(0, kafkamessage.length);
+                                    });
+
+                                }
+                                catch (error) {
+                                    console.log(error);
+                                    console.log('Error - 1');
+                                    console.log(error);
+                                }
                             });
-
-                        }
-                        catch (error) {
-                            console.log(error);
-                            console.log('Error - 1');
-                            console.log(error);
                         }
                     });
                 }
@@ -139,10 +144,10 @@ image and return the image with latest exif.
 return image with exif
  */
 function addResultInImage(exifObj,result,image,phase,callback){
-    var exifObj =  exifObj;
+    var exifObj =  JSON.parse(JSON.stringify(exifObj));
     var bufferedImageDataURI = image;
     // Extracting user comment from exif
-    var userComment = JSON.parse(exifObj["Exif"][piexif.ExifIFD.UserComment]);
+    var userComment = JSON.parse(JSON.stringify(exifObj["Exif"][piexif.ExifIFD.UserComment]));
     // Setting result in user comment
     userComment[phase+'Result'] = JSON.stringify(result);
     console.log('Result ' + JSON.stringify(userComment[phase+'Result']));

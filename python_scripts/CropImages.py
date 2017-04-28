@@ -8,9 +8,9 @@ import sys
 
 print(sys.argv[1])
 im = open(str(sys.argv[1]), "rb")
-with open('/home/cuda/clean_street_sink/temp/Phase2Result.json') as data_file:
+with open('/home/cuda/clean_street_sink/temp/PreviousResult.json') as data_file:
 	data = json.load(data_file)
-print(data[0]['bb1']['x'])
+	data = json.loads(data_file)
 image = Image.open(im).convert("RGBA")
 i = 0
 j = 0
