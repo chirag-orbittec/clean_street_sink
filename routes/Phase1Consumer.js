@@ -18,6 +18,7 @@ var topicName = config_file.topicName;
 var consumerName = config_file.consumerName;
 var scriptName = config_file.scriptName;
 var producerTopicName = config_file.producerTopicName;
+var image_pipeline_model = require('./models/image_pipeline_model');
 
 
 var consumerOptions = {
@@ -89,7 +90,7 @@ function onError (error) {
 }
 
 function onMessage (message) {
-    let message1 = message;
+    var message1 = message;
     q1.push({message: message1}, function(err) {
         console.log('Finished processing Phase  for message- ' + message1.offset);
         consumerGroup1.sendOffsetCommitRequest([{
@@ -157,7 +158,8 @@ function addResultInImage(exifObjCopy,result,image,phase,callback){
     var phaseName = phase + 'Result';
     var userCommentNew = userComment;
     userCommentNew[phaseName] = result;
-
+    var imageid = userCommentNew['id'];
+    console.log("Image ID ======> ", imageid);
     console.log('Update User Comments Result ' , userCommentNew);
     // Updating UserComment in exif object
     exifObj["Exif"][piexif.ExifIFD.UserComment] = JSON.stringify(userCommentNew);
@@ -174,6 +176,18 @@ function addResultInImage(exifObjCopy,result,image,phase,callback){
     //added the new exif object
     bufferedImageDataURI  = piexif.insert(exifbytes, bufferedImageDataURI);
     console.log(piexif.load(bufferedImageDataURI));
-    callback(bufferedImageDataURI);
+    /* Update Image in Database and Proceed */
+    var phaseImageObject = {};
+    phaseImageObject[phase+"ResultImage"] = bufferedImageDataURI;
+    phaseImageObject["exifObj"] = exifObj;
+    image_pipeline_model.findOneAndUpdate({id: imageid},{$set:phaseImageObject},{new: false},function (err) {
+        if(err) {
+            console.log("Error in Database Operation for Phase Image Write ==> ", err);
+        }else {
+            console.log("Writing Result of Phase 1 to Database");
+        }
+        callback(bufferedImageDataURI);
+    }.bind(this));
+
 
 }
