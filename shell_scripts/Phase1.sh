@@ -20,7 +20,11 @@ mv $DEEPMASK/deepmask_output.jpg ~/clean_street_sink/temp
 
 echo "returning boundarybox as string"
 
-echo '{}' > result.json
+exec 3> result.json
+
+echo '{}' >&3
+
+exec 3>&-
 
 mv $DEEPMASK/result.json ~/clean_street_sink/temp
 
