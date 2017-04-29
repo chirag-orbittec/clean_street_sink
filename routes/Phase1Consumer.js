@@ -24,7 +24,7 @@ var consumerOptions = {
     host: config_file.zookeeperServerURL,
     groupId: groupName,
     autoCommit : false,
-    sessionTimeout: 99999,
+    sessionTimeout: 999999,
     protocol: ['roundrobin'],
     fromOffset: 'latest' // equivalent of auto.offset.reset valid values are 'none', 'latest', 'earliest'
 };
@@ -155,7 +155,7 @@ function addResultInImage(exifObjCopy,result,image,phase,callback){
     console.log('test attribute name   ',""+phase+"Result");
     // Setting result in user comment
     var phaseName = phase + 'Result';
-    var userCommentNew = JSON.parse(userComment);
+    var userCommentNew = userComment;
     userCommentNew[phaseName] = result;
 
     console.log('Update User Comments Result ' , userCommentNew);
