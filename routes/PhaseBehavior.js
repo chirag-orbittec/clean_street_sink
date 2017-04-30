@@ -27,6 +27,14 @@ function phase3(exifObj,PhaseResult,image,phase,addResultInImage,sendMessage){
     addResultInImage(exifObj,PhaseResult,image, phase,sendMessage);
 }
 
+function phase4(exifObj,PhaseResult,image,phase,addResultInImage,sendMessage){
+    console.log("=====================================Phase 4 Aggregator===================================================");
+    console.log('============================================EXIF==========================================================');
+    console.log(exifObj);
+    console.log('============================================EXIF - END=====================================================');
+    //addResultInImage(exifObj,PhaseResult,image, phase,sendMessage);
+}
+
 switch(config_file.phaseBehavior){
 
     case 'phase1':
@@ -39,6 +47,10 @@ switch(config_file.phaseBehavior){
 
     case 'phase3' :
         module.exports = {ExecutePhaseLogic : phase3};
+        break;
+
+    case 'phase4' :
+        module.exports = {ExecutePhaseLogic : phase4};
         break;
 }
 

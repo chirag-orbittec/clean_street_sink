@@ -5,10 +5,10 @@
     "kafkaServerURL": "10.82.200.90:9092",
     "phase" : "Phase4",
     "previousPhase" : "Phase3",
-    "phaseBehavior": "phase2",
-    "groupName": "Phase1Group",
-    "topicName": "Phase1Topic",
-    "consumerName": "Phase1Consumer",
-    "scriptName": "LabelImageTensorFLow.sh",
-    "producerTopicName": "Phase2Topics"
+    "phaseBehavior": "phase4",
+    "groupName": "Phase4Group",
+    "topicName": "Phase4Topic",
+    "consumerName": "Phase4Consumer",
+    "scriptName": "phase4.sh",
+    "producerTopicName": "Phase5Topics"
 }

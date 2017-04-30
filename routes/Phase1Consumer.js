@@ -54,7 +54,9 @@ var q1 = asyncqueue(function(message, callback) {
             console.error(err);
             return;
         };
-        console.log("File has been created");
+        console.log("==========================================================================================================================");
+        console.log("==================================File has been created - Starting " + config_file.phase + "============================================");
+        console.log("==========================================================================================================================");
         fsPath.writeFile(tempImageFileName, imagebase64Data, 'base64', function (err) {
             if (err) {
                 console.log('Error - 1');
@@ -66,9 +68,9 @@ var q1 = asyncqueue(function(message, callback) {
                 // in below Array
                 exportScriptParams = [scriptName,tempImageFileName];
                 child = spawn('sh', exportScriptParams, {cwd: path.join(__dirname, "..","shell_scripts")});
-                console.log('stdout here: \n' + child.stdout);
-                console.log('stderr here: \n' + child.stderr);
-                console.log('status here: \n' + child.status);
+                console.log('=============================================stdout here:============================================= \n' + child.stdout);
+                console.log('#############################################stderr here:############################################# \n' + child.stderr);
+                console.log('*********************************************status here:********************************************* \n' + child.status);
 
                 if (child.status === 0) {
                     callback();
@@ -81,7 +83,7 @@ var q1 = asyncqueue(function(message, callback) {
 
 q1.drain = function(){
     consumerGroup1.resume();
-    console.log("Phase 1 queue is empty for now!!!");
+    console.log("######################### Phase 1 queue is empty for now!!! Waiting for New Messages!!!! ######################################");
 }
 
 function onError (error) {
@@ -92,7 +94,7 @@ function onError (error) {
 function onMessage (message) {
     var message1 = message;
     q1.push({message: message1}, function(err) {
-        console.log('Finished processing Phase  for message- ' + message1.offset);
+        console.log('Finished processing Phase  for message===============================> ' + message1.offset);
         consumerGroup1.sendOffsetCommitRequest([{
             topic: message1.topic,
             partition: message1.partition, //default 0
@@ -119,7 +121,8 @@ function onMessage (message) {
                             try {
                                 kafkamessage.push(messageAPI.createMessage('keyed', "image", finalResult));
                                 producer.sendMessage(producerTopicName, kafkamessage, 0, 0, function (result) {
-                                    console.log('Message passed to -' + producerTopicName);
+                                    console.log('######## FINAL ########## Message passed to =======> ' + producerTopicName);
+                                    console.log("==========================================================================================================================");
                                     kafkamessage.splice(0, kafkamessage.length);
                                 });
 
@@ -147,45 +150,50 @@ function onMessage (message) {
  */
 function addResultInImage(exifObjCopy,result,image,phase,callback){
     var exifObj =  JSON.parse(JSON.stringify(exifObjCopy));
-    console.log("Result to be added in exif are - ",result);
-    console.log('Phase is - ',phase);
+    console.log("=========================Result to be added in exif are============================ \n",result);
+    console.log("=========================+++++++++++++++++++++++++++++++++++++============================\n");
+    console.log('#### Phase is - ',phase);
     var bufferedImageDataURI = image;
     // Extracting user comment from exif
     var userComment = JSON.parse(exifObj["Exif"][piexif.ExifIFD.UserComment]);
-    console.log('User comment parsed from EXIF object is -',userComment);
-    console.log('test attribute name   ',""+phase+"Result");
+    console.log('============================User comment parsed from EXIF object is -===================== \n',userComment);
+    console.log("=========================+++++++++++++++++++++++++++++++++++++============================\n");
+    console.log('$$$$$ Test attribute name ======> ',""+phase+"Result");
     // Setting result in user comment
     var phaseName = phase + 'Result';
     var userCommentNew = userComment;
     userCommentNew[phaseName] = result;
     var imageid = userCommentNew['id'];
-    console.log("Image ID ======> ", imageid);
-    console.log('Update User Comments Result ' , userCommentNew);
+    console.log("#### Image ID ======> ", imageid);
+    console.log('############################# Update User Comments Result ###################################\n' , userCommentNew);
+    console.log('############################# ^^^^^^^^^^^^^^^^^^^^^^^^^^^ ###################################\n');
     // Updating UserComment in exif object
     exifObj["Exif"][piexif.ExifIFD.UserComment] = JSON.stringify(userCommentNew);
+    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FINAL EXIF EMBEDDED IN IMAGE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n');
     console.log(exifObj);
+    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ^^^^^^^^^^^^^^^^^^^^^^^^^^^ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n');
     //Removing exif object from current image
     try {
         bufferedImageDataURI = piexif.remove(image);
     }
     catch(error){
-        console.log("exif is not present");
+        console.log("$$$$$$$$$$$$$$ EXIF is not present in the Image, proceeding to Add new EXIF.");
     }
     //Converting exifobject into stream
     var exifbytes = piexif.dump(exifObj);
     //added the new exif object
     bufferedImageDataURI  = piexif.insert(exifbytes, bufferedImageDataURI);
     console.log(piexif.load(bufferedImageDataURI));
-    console.log("Current Phase ====>", phase);
+    console.log("$$$$$$$$$$ Current Phase ====>", phase);
     /* Update Image in Database and Proceed */
     var phaseImageObject = {};
     phaseImageObject[phase+"Image"] = bufferedImageDataURI;
     phaseImageObject["exifObj"] = exifObj;
     image_pipeline_model.findOneAndUpdate({id: imageid},{$set:phaseImageObject},{new: false},function (err) {
         if(err) {
-            console.log("Error in Database Operation for Phase Image Write ==> ", err);
+            console.log("xxxxxxxxxxxxxxx Error in Database Operation for Phase Image Write xxxxxxxxxxxxxxxx", err);
         }else {
-            console.log("Writing Result of Phase 1 to Database");
+            console.log("$$$$ Writing Result of Phase 1 to Database $$$$$$$ ");
         }
         callback(bufferedImageDataURI);
     }.bind(this));
