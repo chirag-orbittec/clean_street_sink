@@ -176,9 +176,10 @@ function addResultInImage(exifObjCopy,result,image,phase,callback){
     //added the new exif object
     bufferedImageDataURI  = piexif.insert(exifbytes, bufferedImageDataURI);
     console.log(piexif.load(bufferedImageDataURI));
+    console.log("Current Phase ====>", phase);
     /* Update Image in Database and Proceed */
     var phaseImageObject = {};
-    phaseImageObject[phase+"ResultImage"] = bufferedImageDataURI;
+    phaseImageObject[phase+"Image"] = bufferedImageDataURI;
     phaseImageObject["exifObj"] = exifObj;
     image_pipeline_model.findOneAndUpdate({id: imageid},{$set:phaseImageObject},{new: false},function (err) {
         if(err) {
