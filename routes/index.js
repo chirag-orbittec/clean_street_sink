@@ -1,9 +1,30 @@
 var express = require('express');
 var router = express.Router();
+var PhaseBehavior = require('./PhaseBehavior');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  var exifObj = { '0th':
+      { '271': 'Clean Streets',
+          '282': [ 777, 1 ],
+          '283': [ 777, 1 ],
+          '305': 'Clean Streets',
+          '34665': 130,
+          '34853': 5116 },
+      Exif:
+          { '36867': '2017-03-30 10:45:08',
+              '37510': '{"id":24,"Phase1Result":"{}\\n","Phase2Result":"[{\\"bb1\\":{\\"x\\":427,\\"y\\":437,\\"w\\":52,\\"h\\":42}},{\\"bb2\\":{\\"x\\":720,\\"y\\":348,\\"w\\":52,\\"h\\":50}},{\\"bb3\\":{\\"x\\":418,\\"y\\":384,\\"w\\":113,\\"h\\":113}},{\\"bb4\\":{\\"x\\":90,\\"y\\":395,\\"w\\":113,\\"h\\":113}},{\\"bb5\\":{\\"x\\":593,\\"y\\":222,\\"w\\":54,\\"h\\":81}},{\\"bb6\\":{\\"x\\":588,\\"y\\":214,\\"w\\":113,\\"h\\":113}},{\\"bb7\\":{\\"x\\":272,\\"y\\":431,\\"w\\":89,\\"h\\":111}},{\\"bb8\\":{\\"x\\":319,\\"y\\":476,\\"w\\":53,\\"h\\":45}},{\\"bb9\\":{\\"x\\":642,\\"y\\":735,\\"w\\":58,\\"h\\":32}},{\\"bb10\\":{\\"x\\":275,\\"y\\":482,\\"w\\":31,\\"h\\":52}},{\\"bb11\\":{\\"x\\":96,\\"y\\":403,\\"w\\":61,\\"h\\":95}},{\\"bb12\\":{\\"x\\":562,\\"y\\":60,\\"w\\":48,\\"h\\":34}},{\\"bb13\\":{\\"x\\":559,\\"y\\":60,\\"w\\":52,\\"h\\":35}},{\\"bb14\\":{\\"x\\":576,\\"y\\":203,\\"w\\":113,\\"h\\":113}},{\\"bb15\\":{\\"x\\":224,\\"y\\":128,\\"w\\":160,\\"h\\":160}}]\\n","Phase3Result":"{\\"bb1\\":[{\\"fountain\\": 0.17259088158607483}, {\\"head cabbage\\": 0.07140511274337769}, {\\"plastic bag\\": 0.045772261917591095}, {\\"jellyfish\\": 0.02157437428832054}, {\\"packet\\": 0.014516078867018223}],\\"bb2\\":[{\\"electric ray, crampfish, numbfish, torpedo\\": 0.12693355977535248}, {\\"Loafer\\": 0.10155459493398666}, {\\"chambered nautilus, pearly nautilus, nautilus\\": 0.07322855293750763}, {\\"clog, geta, patten, sabot\\": 0.02887246571481228}, {\\"sandal\\": 0.02758353017270565}],\\"bb3\\":[{\\"electric ray, crampfish, numbfish, torpedo\\": 0.1452181190252304}, {\\"whistle\\": 0.0747729167342186}, {\\"chain saw, chainsaw\\": 0.06357430666685104}, {\\"space shuttle\\": 0.03345145657658577}, {\\"chambered nautilus, pearly nautilus, nautilus\\": 0.02797004207968712}],\\"bb4\\":[{\\"platypus, duckbill, duckbilled platypus, duck-billed platypus, Ornithorhynchus anatinus\\": 0.29351806640625}, {\\"space shuttle\\": 0.12401560693979263}, {\\"isopod\\": 0.08092060685157776}, {\\"sturgeon\\": 0.070091612637043}, {\\"electric ray, crampfish, numbfish, torpedo\\": 0.027719970792531967}],\\"bb5\\":[{\\"jellyfish\\": 0.4589112102985382}, {\\"plastic bag\\": 0.06232656538486481}, {\\"bonnet, poke bonnet\\": 0.01969851367175579}, {\\"head cabbage\\": 0.016735315322875977}, {\\"cauliflower\\": 0.014826081693172455}],\\"bb6\\":[{\\"minivan\\": 0.6583831906318665}, {\\"moving van\\": 0.11681611090898514}, {\\"minibus\\": 0.01489199511706829}, {\\"car wheel\\": 0.012670786119997501}, {\\"beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon\\": 0.01183158066123724}],\\"bb7\\":[{\\"minivan\\": 0.4608256220817566}, {\\"sports car, sport car\\": 0.0529208779335022}, {\\"convertible\\": 0.04357711225748062}, {\\"beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon\\": 0.029762329533696175}, {\\"car wheel\\": 0.023912711068987846}],\\"bb8\\":[{\\"jellyfish\\": 0.9329447150230408}, {\\"tray\\": 0.005344322882592678}, {\\"head cabbage\\": 0.0020947728771716356}, {\\"Petri dish\\": 0.0014818592462688684}, {\\"plastic bag\\": 0.0012832259526476264}],\\"bb9\\":[{\\"minivan\\": 0.8607717156410217}, {\\"moving van\\": 0.060979463160037994}, {\\"minibus\\": 0.013969137333333492}, {\\"beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon\\": 0.0024904331658035517}, {\\"car wheel\\": 0.0020550121553242207}],\\"bb10\\":[{\\"minivan\\": 0.3559008240699768}, {\\"moving van\\": 0.20379051566123962}, {\\"minibus\\": 0.05779242515563965}, {\\"tow truck, tow car, wrecker\\": 0.028518071398139}, {\\"trailer truck, tractor trailer, trucking rig, rig, articulated lorry, semi\\": 0.017779476940631866}],\\"bb11\\":[{\\"minivan\\": 0.3211534917354584}, {\\"racer, race car, racing car\\": 0.14080080389976501}, {\\"beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon\\": 0.1087312176823616}, {\\"cab, hack, taxi, taxicab\\": 0.05579862743616104}, {\\"sports car, sport car\\": 0.03463354334235191}],\\"bb12\\":[{\\"minivan\\": 0.8254185914993286}, {\\"minibus\\": 0.02292998693883419}, {\\"recreational vehicle, RV, R.V.\\": 0.020319590345025063}, {\\"moving van\\": 0.010225899517536163}, {\\"beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon\\": 0.009806299582123756}],\\"bb13\\":[{\\"jellyfish\\": 0.3206225335597992}, {\\"isopod\\": 0.11183980107307434}, {\\"lacewing, lacewing fly\\": 0.08825523406267166}, {\\"nematode, nematode worm, roundworm\\": 0.01680649258196354}, {\\"sturgeon\\": 0.011625758372247219}],\\"bb14\\":[{\\"jellyfish\\": 0.3490819036960602}, {\\"head cabbage\\": 0.0896051898598671}, {\\"isopod\\": 0.05799570307135582}, {\\"nematode, nematode worm, roundworm\\": 0.02058035135269165}, {\\"Petri dish\\": 0.018398892134428024}],\\"bb15\\":[{\\"minivan\\": 0.6608745455741882}, {\\"dalmatian, coach dog, carriage dog\\": 0.0823211595416069}, {\\"beach wagon, station wagon, wagon, estate car, beach waggon, station waggon, waggon\\": 0.011310732923448086}, {\\"minibus\\": 0.008278632536530495}, {\\"police van, police wagon, paddy wagon, patrol wagon, wagon, black Maria\\": 0.00767433550208807}]}\\n"}',
+              '41994': 777,
+              '42034': [ [Object], [Object], [Object], [Object] ],
+              '42035': 'Clean Streets' },
+      GPS: { '0': [ 7, 7, 7, 7 ], '29': '1999:99:99 99:99:99' },
+      Interop: {},
+      '1st': {},
+      thumbnail: null };
+  var test = PhaseBehavior.ExecutePhaseLogic(exifObj,{},{}, {}, {},function (finalResult) {
+
+  }.bind(this));
+    res.send({"test":"test"});
 });
 
 module.exports = router;

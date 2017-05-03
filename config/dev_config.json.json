@@ -6,7 +6,7 @@
     "groupName": "Phase1Group",
     "phase" : "Phase4",
     "previousPhase" : "Phase3",
-    "phaseBehavior": "phase2",
+    "phaseBehavior": "phase4",
     "topicName": "Phase1Topic",
     "consumerName": "Phase1Consumer",
     "scriptName": "LabelImageTensorFLow.sh",
