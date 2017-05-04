@@ -16,7 +16,7 @@ do
     imgName="/home/cuda/clean_street_sink/images/result/cropimage"$(($i-1))".jpeg"
     echo $imgName
     result=$result$(echo "\"bb"${i}"\":")
-    result=$result$(python /home/cuda/tensorflow/models/tutorials/image/imagenet/classify_image.py --image_file=$imgName)
+    result=$result$(python /home/cuda/tensorflow/models/tutorials/image/imagenet/classify_image.py $imgName)
     if [ $i -ne $noofimg ];then
         result=$result$(echo ",")
     fi
