@@ -12,8 +12,7 @@ function phase1(exifObj,PhaseResult,image,phase,addResultInImage,sendMessage){
     console.log("========================================== Phase 1 =======================================================");
     console.log("==========================================================================================================");
     var image1 =  'data:image/jpeg;base64,' + base64_encode(path.join(__dirname, '..', 'temp', 'deepmask_output.jpg'));
-    addResultInImage(exifObj,PhaseResult,image1,phase,sendMessage);
-
+    addResultInImage(exifObj,PhaseResult,image1,phase,sendMessage,image1);
 }
 
 function phase2(exifObj,PhaseResult,image, phase,addResultInImage,sendMessage){
@@ -22,15 +21,14 @@ function phase2(exifObj,PhaseResult,image, phase,addResultInImage,sendMessage){
     console.log("========================================== Phase 2 =======================================================");
     console.log("==========================================================================================================");
     var image1 =  'data:image/jpeg;base64,' + base64_encode(path.join(__dirname, '..', 'temp', 'deepmask_output.jpg'));
-    addResultInImage(exifObj,PhaseResult,image,phase,sendMessage);
-
+    addResultInImage(exifObj,PhaseResult,image,phase,sendMessage,image1);
 }
 
 function phase3(exifObj,PhaseResult,image,phase,addResultInImage,sendMessage){
     console.log("==========================================================================================================");
     console.log("========================================== Phase 3 =======================================================");
     console.log("==========================================================================================================");
-    addResultInImage(exifObj,PhaseResult,image, phase,sendMessage);
+    addResultInImage(exifObj,PhaseResult,image, phase,sendMessage, image);
 }
 
 function phase4(exifObj,PhaseResult,image,phase,addResultInImage,sendMessage){

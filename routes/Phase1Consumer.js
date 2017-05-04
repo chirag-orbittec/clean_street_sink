@@ -148,7 +148,7 @@ function onMessage (message) {
  image and return the image with latest exif.
  return image with exif
  */
-function addResultInImage(exifObjCopy,result,image,phase,callback){
+function addResultInImage(exifObjCopy,result,image,phase,callback, saveImage){
     var exifObj =  JSON.parse(JSON.stringify(exifObjCopy));
     console.log("=========================Result to be added in exif are============================ \n",result);
     console.log("=========================+++++++++++++++++++++++++++++++++++++============================\n");
@@ -187,7 +187,7 @@ function addResultInImage(exifObjCopy,result,image,phase,callback){
     console.log("$$$$$$$$$$ Current Phase ====>", phase);
     /* Update Image in Database and Proceed */
     var phaseImageObject = {};
-    phaseImageObject[phase+"Image"] = bufferedImageDataURI;
+    phaseImageObject[phase+"Image"] = saveImage;
     phaseImageObject["exifObj"] = exifObj;
     image_pipeline_model.findOneAndUpdate({id: imageid},{$set:phaseImageObject},{new: false},function (err) {
         if(err) {
