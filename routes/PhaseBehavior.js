@@ -22,7 +22,7 @@ function phase2(exifObj,PhaseResult,image, phase,addResultInImage,sendMessage){
     console.log("========================================== Phase 2 =======================================================");
     console.log("==========================================================================================================");
     var image1 =  'data:image/jpeg;base64,' + base64_encode(path.join(__dirname, '..', 'temp', 'deepmask_output.jpg'));
-    addResultInImage(exifObj,PhaseResult,image1,phase,sendMessage);
+    addResultInImage(exifObj,PhaseResult,image,phase,sendMessage);
 
 }
 
